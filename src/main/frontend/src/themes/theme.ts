@@ -1,8 +1,8 @@
 import {createTheme, Theme} from "@mui/material";
-import {ThemeMode, ThemeSchema, ThemeType} from "./theme-schema";
+import {ThemeType, ThemeSchema, ThemeMode} from "./theme-schema";
 import {lightTheme, darkTheme} from "./theme-colors";
 
-export const buildTheme = (themeData: ThemeSchema, mode: ThemeMode): Theme => {
+const buildTheme = (themeData: ThemeSchema, mode: ThemeType): Theme => {
     return createTheme({
         palette: {
             common: {
@@ -36,6 +36,6 @@ export const buildTheme = (themeData: ThemeSchema, mode: ThemeMode): Theme => {
     });
 };
 
-export const getTheme = (mode: ThemeMode): Theme => {
-    return mode === ThemeType.LIGHT ? buildTheme(lightTheme, mode) : buildTheme(darkTheme, mode);
+export const getTheme = (mode: ThemeType): Theme => {
+    return mode === ThemeMode.LIGHT ? buildTheme(lightTheme, mode) : buildTheme(darkTheme, mode);
 }

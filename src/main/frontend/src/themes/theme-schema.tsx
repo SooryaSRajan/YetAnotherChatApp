@@ -11,9 +11,9 @@ export interface ThemeSchema {
     onSurface: string;
 }
 
-export enum ThemeType {
+export enum ThemeMode {
     LIGHT = 'light',
     DARK = 'dark',
 }
 
-export type ThemeMode = ThemeType;
+export type ThemeType = ThemeMode;
