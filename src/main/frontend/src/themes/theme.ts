@@ -1,67 +1,41 @@
-import {ThemeSchema} from "./theme-schema";
+import {createTheme, Theme} from "@mui/material";
+import {ThemeMode, ThemeSchema, ThemeType} from "./theme-schema";
+import {lightTheme, darkTheme} from "./theme-colors";
 
-export const lightTheme: ThemeSchema = {
-    primary: '#006689',
-    onPrimary: '#FFFFFF',
-    primaryContainer: '#C3E8FF',
-    onPrimaryContainer: '#001E2C',
-    secondary: '#6844C8',
-    onSecondary: '#FFFFFF',
-    secondaryContainer: '#E8DDFF',
-    onSecondaryContainer: '#21005E',
-    tertiary: '#5F52A7',
-    onTertiary: '#FFFFFF',
-    tertiaryContainer: '#E5DEFF',
-    onTertiaryContainer: '#1A0261',
-    error: '#BA1A1A',
-    errorContainer: '#FFDAD6',
-    onError: '#FFFFFF',
-    onErrorContainer: '#410002',
-    background: '#FEFBFF',
-    onBackground: '#001849',
-    surface: '#FEFBFF',
-    onSurface: '#001849',
-    surfaceVariant: '#DCE3E9',
-    onSurfaceVariant: '#41484D',
-    outline: '#71787D',
-    onInverseSurface: '#EEF0FF',
-    inverseSurface: '#002B75',
-    inversePrimary: '#7AD1FF',
-    shadow: '#000000',
-    surfaceTint: '#006689',
-    outlineVariant: '#C0C7CD',
-    scrim: '#000000',
+export const buildTheme = (themeData: ThemeSchema, mode: ThemeMode): Theme => {
+    return createTheme({
+        palette: {
+            common: {
+                black: '#000',
+                white: '#fff',
+            },
+            mode: mode,
+            contrastThreshold: 3,
+            tonalOffset: 0.2,
+            primary: {
+                main: themeData.primary,
+                contrastText: themeData.onPrimary,
+            },
+            secondary: {
+                main: themeData.secondary,
+                contrastText: themeData.onSecondary,
+            },
+            error: {
+                main: themeData.error,
+                contrastText: themeData.onError,
+            },
+            text: {
+                primary: themeData.onBackground,
+                secondary: themeData.onSurface,
+            },
+            background: {
+                default: themeData.background,
+                paper: themeData.surface,
+            },
+        },
+    });
 };
 
-export const darkTheme: ThemeSchema = {
-    primary: '#7AD1FF',
-    onPrimary: '#003549',
-    primaryContainer: '#004C68',
-    onPrimaryContainer: '#C3E8FF',
-    secondary: '#CEBDFF',
-    onSecondary: '#380094',
-    secondaryContainer: '#5027AF',
-    onSecondaryContainer: '#E8DDFF',
-    tertiary: '#C9BFFF',
-    onTertiary: '#302175',
-    tertiaryContainer: '#473A8D',
-    onTertiaryContainer: '#E5DEFF',
-    error: '#FFB4AB',
-    errorContainer: '#93000A',
-    onError: '#690005',
-    onErrorContainer: '#FFDAD6',
-    background: '#001849',
-    onBackground: '#DBE1FF',
-    surface: '#001849',
-    onSurface: '#DBE1FF',
-    surfaceVariant: '#41484D',
-    onSurfaceVariant: '#C0C7CD',
-    outline: '#8A9297',
-    onInverseSurface: '#001849',
-    inverseSurface: '#DBE1FF',
-    inversePrimary: '#006689',
-    shadow: '#000000',
-    surfaceTint: '#7AD1FF',
-    outlineVariant: '#41484D',
-    scrim: '#000000',
-};
+export const getTheme = (mode: ThemeMode): Theme => {
+    return mode === ThemeType.LIGHT ? buildTheme(lightTheme, mode) : buildTheme(darkTheme, mode);
+}
