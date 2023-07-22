@@ -37,19 +37,34 @@ public class User {
     private ProfileStatus profileStatus = ProfileStatus.PUBLIC;
 
     @ManyToMany
+    @JoinTable(
+            name = "user_friends",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "friend_id")
+    )
     @JsonIgnore
     private List<User> friends;
 
     @ManyToMany
+    @JoinTable(
+            name = "pending_requests",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "pending_request_user_id")
+    )
     @JsonIgnore
     private List<User> pendingRequests;
 
     @ManyToMany
+    @JoinTable(
+            name = "sent_requests",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "sent_request_user_id")
+    )
     @JsonIgnore
     private List<User> sentRequests;
 
-    @OneToMany
     @JsonIgnore
+    @ManyToMany(mappedBy = "users")
     private List<Chats> userChats;
 
     //TODO: Add my posts, stories,

@@ -33,8 +33,6 @@ public class UserController {
         user.setUsername(username);
         user.setPassword(password);
         user.setEmail(email);
-        user.setFirstName(firstName);
-        user.setLastName(lastName);
         userService.addUser(user);
 
         return ResponseEntity.ok("User added successfully");

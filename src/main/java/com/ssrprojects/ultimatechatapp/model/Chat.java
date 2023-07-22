@@ -8,12 +8,15 @@ import java.util.Date;
 
 @Entity
 @Data
-@Table(name = "chats")
+@Table(name = "chat")
 public class Chat {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @ManyToOne
+    private Chats chats;
 
     private String message;
 
