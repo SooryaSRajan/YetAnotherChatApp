@@ -47,4 +47,11 @@ public class Chat {
     public Long getId() {
         return id;
     }
+
+    public void setIsEdited(Boolean isEdited) {
+        this.isEdited = isEdited;
+        if(isEdited) {
+            this.editedAt = new Date();
+        }
+    }
 }
