@@ -1,9 +1,10 @@
 package com.ssrprojects.ultimatechatapp.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.ssrprojects.ultimatechatapp.model.enums.ProfileStatus;
+import jakarta.persistence.*;
 import lombok.Data;
+import java.util.List;
 
 @Entity
 @Data
@@ -11,15 +12,47 @@ import lombok.Data;
 public class User {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false, unique = true)
     private String username;
 
+    @JsonIgnore
     private String password;
 
+    @Column(nullable = false, unique = true)
+    @JsonIgnore
     private String email;
 
-    private String firstName;
+    private String displayName;
 
-    private String lastName;
+    private Integer age;
+
+    private String profilePicture;
+
+    private String bio;
+
+    @Enumerated(EnumType.STRING)
+    private ProfileStatus profileStatus = ProfileStatus.PUBLIC;
+
+    @ManyToMany
+    @JsonIgnore
+    private List<User> friends;
+
+    @ManyToMany
+    @JsonIgnore
+    private List<User> pendingRequests;
+
+    @ManyToMany
+    @JsonIgnore
+    private List<User> sentRequests;
+
+    @OneToMany
+    @JsonIgnore
+    private List<Chats> userChats;
+
+    //TODO: Add my posts, stories,
 
     public User() {
 

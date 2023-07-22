@@ -15,6 +15,14 @@ export function Login(): React.ReactElement {
 
     return (
         <Container component="main" maxWidth="xs">
+            <Box sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                mt: 8
+            }}>
+                <img alt="logo"/>
+            </Box>
             <CssBaseline/>
             <Box
                 sx={{

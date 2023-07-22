@@ -14,8 +14,6 @@ export function ThemeWrapper(
         return getTheme(themeMode);
     }, [themeMode]);
 
-    console.log(themeData, themeMode)
-
     return (
         <ThemeProvider theme={themeData}>
             {props.children}
