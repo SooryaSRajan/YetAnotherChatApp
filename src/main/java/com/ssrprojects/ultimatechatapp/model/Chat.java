@@ -36,6 +36,9 @@ public class Chat {
 
     private MessageAssetType assetType;
 
+    private Boolean isEdited;
+
+    private Date editedAt;
 
     public void setId(Long id) {
         this.id = id;
