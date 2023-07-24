@@ -1,12 +1,29 @@
 version: "3.8"
 
 services:
-  db:
+  postgres:
     image: postgres
     restart: always
     ports:
       - "5432:5432"
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
+      POSTGRES_PASSWORD: postgres-ultimate
       POSTGRES_DB: ultimate-chats
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+
+  cassandra:
+    image: cassandra:latest
+    container_name: cassandra
+    ports:
+      - "9042:9042"
+    environment:
+      CASSANDRA_SEEDS: cassandra
+      CASSANDRA_CLUSTER_NAME: chat-cluster
+      CASSANDRA_DC: datacenter-main
+      CASSANDRA_USER: cassendra_user
+      CASSANDRA_PASSWORD: cassendra-ultimate
+    volumes:
+      - ./cassandra-data:/var/lib/cassandra
+

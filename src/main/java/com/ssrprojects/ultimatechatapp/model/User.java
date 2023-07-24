@@ -13,8 +13,8 @@ public class User {
 
     @Id
     @Column(name = "user_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
 
     @Column(nullable = false, unique = true)
     private String username;
@@ -64,9 +64,8 @@ public class User {
     @JsonIgnore
     private List<User> sentRequests;
 
-    @JsonIgnore
-    @ManyToMany(mappedBy = "users")
-    private List<Chats> userChats;
+    @ElementCollection
+    private List<String> userChats;
 
     //TODO: Add my posts, stories,
 
