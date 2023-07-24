@@ -12,33 +12,36 @@ import java.util.Date;
 public class Chat {
 
     @Id
+    @Column(name = "chat_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
     private Chats chats;
 
-    private String message;
+    private String message = "";
 
+    @Column(nullable = false)
     private Long senderId;
 
+    @Column(nullable = false)
     private Long receiverId;
 
-    private Date sentAt;
+    private Date sentAt = null;
 
-    private Date receivedAt;
+    private Date receivedAt = null;
 
-    private Date seenAt;
+    private Date seenAt = null;
 
-    private Boolean isSeen;
+    private Boolean isSeen = false;
 
-    private Boolean isReceived;
+    private Boolean isReceived = false;
 
-    private MessageAssetType assetType;
+    private MessageAssetType assetType = MessageAssetType.TEXT;
 
-    private Boolean isEdited;
+    private Boolean isEdited = false;
 
-    private Date editedAt;
+    private Date editedAt = null;
 
     public void setId(Long id) {
         this.id = id;
