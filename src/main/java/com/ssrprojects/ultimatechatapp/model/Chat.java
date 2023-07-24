@@ -1,31 +1,27 @@
 package com.ssrprojects.ultimatechatapp.model;
 
+import com.datastax.oss.driver.api.core.uuid.Uuids;
 import com.ssrprojects.ultimatechatapp.model.enums.MessageAssetType;
-import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.data.cassandra.core.mapping.PrimaryKey;
+import org.springframework.data.cassandra.core.mapping.Table;
 
 import java.util.Date;
 
-@Entity
+@Table("chat_messages")
 @Data
-@Table(name = "chat")
 public class Chat {
 
-    @Id
-    @Column(name = "chat_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @PrimaryKey
+    private String id;
 
-    @ManyToOne
-    private Chats chats;
+    private String senderId;
 
-    private String message = "";
+    private String receiverId;
 
-    @Column(nullable = false)
-    private Long senderId;
+    private String content = "";
 
-    @Column(nullable = false)
-    private Long receiverId;
+    private Date createdAt = new Date();
 
     private Date sentAt = null;
 
@@ -43,18 +39,16 @@ public class Chat {
 
     private Date editedAt = null;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
     public void setIsEdited(Boolean isEdited) {
         this.isEdited = isEdited;
-        if(isEdited) {
+        if (isEdited) {
             this.editedAt = new Date();
         }
     }
+
+    public Chat() {
+        id = Uuids.random().toString();
+    }
+
 }
+
