@@ -35,8 +35,8 @@ out/
 
 ### Database ###
 #root cassendra-data and postgres-data
-cassandra-data/
-postgres-data/
+cassandra-data/**/*
+postgres-data/**/*
 
 ### Nodemodules ###
 src/main/frontend/node_modules/
