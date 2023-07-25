@@ -1,12 +1,14 @@
 package com.ssrprojects.ultimatechatapp.model;
 
-import com.datastax.oss.driver.api.core.uuid.Uuids;
+import com.fasterxml.jackson.annotation.ObjectIdGenerator;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.ssrprojects.ultimatechatapp.model.enums.MessageAssetType;
 import lombok.Data;
 import org.springframework.data.cassandra.core.mapping.PrimaryKey;
 import org.springframework.data.cassandra.core.mapping.Table;
 
 import java.util.Date;
+import java.util.UUID;
 
 @Table("chat_messages")
 @Data
@@ -47,7 +49,7 @@ public class Chat {
     }
 
     public Chat() {
-        id = Uuids.random().toString();
+        id = UUID.randomUUID().toString();
     }
 
 }

@@ -1,29 +1,23 @@
 package com.ssrprojects.ultimatechatapp.model;
 
-import com.datastax.oss.driver.api.core.uuid.Uuids;
 import lombok.Builder;
-import lombok.Data;
-import org.springframework.data.cassandra.core.cql.PrimaryKeyType;
+import lombok.Getter;
 import org.springframework.data.cassandra.core.mapping.PrimaryKey;
-import org.springframework.data.cassandra.core.mapping.PrimaryKeyColumn;
 import org.springframework.data.cassandra.core.mapping.Table;
 
 import java.util.List;
+import java.util.UUID;
 
 @Table("user_chats")
-@Data
 @Builder
+@Getter
 public class UserChats {
 
     @PrimaryKey
-    private final String id;
+    @Builder.Default
+    private final String id = UUID.randomUUID().toString();
 
-    @PrimaryKeyColumn(name = "participating_users", type = PrimaryKeyType.CLUSTERED)
     private List<String> participatingUsers;
 
     private List<Chat> chats;
-
-    public UserChats() {
-        id = Uuids.random().toString();
-    }
 }
