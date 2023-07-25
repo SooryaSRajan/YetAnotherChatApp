@@ -78,8 +78,9 @@ public class ChatServiceImpl implements ChatService {
         UserChats existingUserChats = provisionChatsForUsers(userA, userB);
 
         if (existingUserChats != null) {
-            existingUserChats.getChats().add(chat);
+            existingUserChats.addToChats(chat);
             chatRepository.save(existingUserChats);
+            return;
         }
 
         throw new RuntimeException("Unable to add chat for users");
@@ -100,6 +101,7 @@ public class ChatServiceImpl implements ChatService {
         if (existingUserChats != null) {
             existingUserChats.getChats().removeIf(chat -> chat.getId().equals(id));
             chatRepository.save(existingUserChats);
+            return;
         }
 
         throw new RuntimeException("Unable to delete chat for users");
@@ -121,6 +123,7 @@ public class ChatServiceImpl implements ChatService {
             existingUserChats.getChats().add(chat);
             existingUserChats.getChats().sort(Comparator.comparing(Chat::getCreatedAt));
             chatRepository.save(existingUserChats);
+            return;
         }
 
         throw new RuntimeException("Unable to edit chat for users");

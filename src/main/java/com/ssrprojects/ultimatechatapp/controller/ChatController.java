@@ -40,6 +40,7 @@ public class ChatController {
         return ResponseEntity.ok("Chat sent successfully");
     }
 
+    //sample URL: http://localhost:8080/chats/getChats/senderID/receiverID
     @GetMapping("/getChats/{senderID}/{receiverID}")
     public ResponseEntity<List<Chat>> getChats(@PathVariable String senderID, @PathVariable String receiverID) {
         User sendingUser = userService.getUserByUsername(senderID);

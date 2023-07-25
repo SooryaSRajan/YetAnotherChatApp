@@ -2,9 +2,11 @@ package com.ssrprojects.ultimatechatapp.model;
 
 import lombok.Builder;
 import lombok.Getter;
+import org.springframework.data.cassandra.core.mapping.CassandraType;
 import org.springframework.data.cassandra.core.mapping.PrimaryKey;
 import org.springframework.data.cassandra.core.mapping.Table;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,5 +21,15 @@ public class UserChats {
 
     private List<String> participatingUsers;
 
-    private List<Chat> chats;
+    @CassandraType(type = CassandraType.Name.LIST, typeArguments = CassandraType.Name.UDT, userTypeName = "chat_messages")
+    @Builder.Default
+    private List<Chat> chats = new ArrayList<>();
+
+    public void setChats(List<Chat> chats) {
+        this.chats = chats;
+    }
+
+    public void addToChats(Chat chat) {
+        this.chats.add(chat);
+    }
 }

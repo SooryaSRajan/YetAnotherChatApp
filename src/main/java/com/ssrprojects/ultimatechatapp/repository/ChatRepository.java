@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ChatRepository extends CassandraRepository<UserChats, String> {
 
-    @Query("SELECT * FROM user_chats WHERE participating_users CONTAINS ?0 AND participating_users CONTAINS ?1")
+    @Query("SELECT * FROM user_chats WHERE participatingusers CONTAINS ?0 AND participatingusers CONTAINS ?1 ALLOW FILTERING")
     UserChats findByParticipatingUsers(String userA, String userB);
 
 }

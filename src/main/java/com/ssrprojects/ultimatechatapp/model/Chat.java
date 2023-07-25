@@ -1,20 +1,17 @@
 package com.ssrprojects.ultimatechatapp.model;
 
-import com.fasterxml.jackson.annotation.ObjectIdGenerator;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.ssrprojects.ultimatechatapp.model.enums.MessageAssetType;
 import lombok.Data;
-import org.springframework.data.cassandra.core.mapping.PrimaryKey;
-import org.springframework.data.cassandra.core.mapping.Table;
+import org.springframework.data.cassandra.core.mapping.UserDefinedType;
 
 import java.util.Date;
 import java.util.UUID;
 
-@Table("chat_messages")
+
 @Data
+@UserDefinedType("chat_messages")
 public class Chat {
 
-    @PrimaryKey
     private String id;
 
     private String senderId;
