@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ssrprojects.ultimatechatapp.model.enums.ProfileStatus;
 import jakarta.persistence.*;
 import lombok.Data;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -64,12 +66,18 @@ public class User {
     @JsonIgnore
     private List<User> sentRequests;
 
-    @ElementCollection
-    private List<String> userChats;
-
     //TODO: Add my posts, stories,
 
     public User() {
-
+        username = "";
+        password = "";
+        email = "";
+        displayName = "";
+        age = 0;
+        profilePicture = "";
+        bio = "";
+        friends = new ArrayList<>();
+        pendingRequests = new ArrayList<>();
+        sentRequests = new ArrayList<>();
     }
 }
