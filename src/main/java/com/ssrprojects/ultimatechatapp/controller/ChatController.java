@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/chats")
 public class ChatController {
@@ -25,28 +27,25 @@ public class ChatController {
     //sample URL: http://localhost:8080/chats/addChat/senderID/receiverID/message
     @GetMapping("/addChat/{senderID}/{receiverID}/{message}")
     public ResponseEntity<String> addChat(@PathVariable String senderID, @PathVariable String receiverID, @PathVariable String message) {
-
         User sendingUser = userService.getUserByUsername(senderID);
         User receivingUser = userService.getUserByUsername(receiverID);
 
         Chat chat = new Chat();
         chat.setSenderId(sendingUser.getId());
         chat.setReceiverId(receivingUser.getId());
-        chat.setMessage(message);
+        chat.setContent(message);
 
         chatService.sendChatFromUser(sendingUser, receivingUser, chat);
 
-        return ResponseEntity.ok("User added successfully");
+        return ResponseEntity.ok("Chat sent successfully");
     }
 
+    //sample URL: http://localhost:8080/chats/getChats/senderID/receiverID
     @GetMapping("/getChats/{senderID}/{receiverID}")
-    public ResponseEntity<String> getChats(@PathVariable String senderID, @PathVariable String receiverID) {
-
+    public ResponseEntity<List<Chat>> getChats(@PathVariable String senderID, @PathVariable String receiverID) {
         User sendingUser = userService.getUserByUsername(senderID);
         User receivingUser = userService.getUserByUsername(receiverID);
 
-        chatService.getChatsForUsers(sendingUser, receivingUser);
-
-        return ResponseEntity.ok("User added successfully");
+        return ResponseEntity.ok(chatService.getChatsForUsers(sendingUser, receivingUser));
     }
 }

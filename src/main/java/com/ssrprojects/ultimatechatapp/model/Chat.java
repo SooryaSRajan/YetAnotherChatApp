@@ -1,57 +1,53 @@
 package com.ssrprojects.ultimatechatapp.model;
 
 import com.ssrprojects.ultimatechatapp.model.enums.MessageAssetType;
-import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.data.cassandra.core.mapping.UserDefinedType;
 
 import java.util.Date;
+import java.util.UUID;
 
-@Entity
+
 @Data
-@Table(name = "chat")
+@UserDefinedType("chat_messages")
 public class Chat {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
-    @ManyToOne
-    private Chats chats;
+    private String senderId;
 
-    private String message;
+    private String receiverId;
 
-    private Long senderId;
+    private String content = "";
 
-    private Long receiverId;
+    private Date createdAt = new Date();
 
-    private Date sentAt;
+    private Date sentAt = null;
 
-    private Date receivedAt;
+    private Date receivedAt = null;
 
-    private Date seenAt;
+    private Date seenAt = null;
 
-    private Boolean isSeen;
+    private Boolean isSeen = false;
 
-    private Boolean isReceived;
+    private Boolean isReceived = false;
 
-    private MessageAssetType assetType;
+    private MessageAssetType assetType = MessageAssetType.TEXT;
 
-    private Boolean isEdited;
+    private Boolean isEdited = false;
 
-    private Date editedAt;
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getId() {
-        return id;
-    }
+    private Date editedAt = null;
 
     public void setIsEdited(Boolean isEdited) {
         this.isEdited = isEdited;
-        if(isEdited) {
+        if (isEdited) {
             this.editedAt = new Date();
         }
     }
+
+    public Chat() {
+        id = UUID.randomUUID().toString();
+    }
+
 }
+

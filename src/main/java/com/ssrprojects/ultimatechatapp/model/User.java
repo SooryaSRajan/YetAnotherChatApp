@@ -2,18 +2,24 @@ package com.ssrprojects.ultimatechatapp.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ssrprojects.ultimatechatapp.model.enums.ProfileStatus;
+import com.ssrprojects.ultimatechatapp.model.enums.Roles;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Entity
 @Data
 @Table(name = "user_details")
-public class User {
+public class User implements UserDetails {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "user_id")
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
 
     @Column(nullable = false, unique = true)
     private String username;
@@ -63,13 +69,49 @@ public class User {
     @JsonIgnore
     private List<User> sentRequests;
 
-    @JsonIgnore
-    @ManyToMany(mappedBy = "users")
-    private List<Chats> userChats;
-
     //TODO: Add my posts, stories,
 
     public User() {
+        username = "";
+        password = "";
+        email = "";
+        displayName = "";
+        age = 0;
+        profilePicture = "";
+        bio = "";
+        friends = new ArrayList<>();
+        pendingRequests = new ArrayList<>();
+        sentRequests = new ArrayList<>();
+    }
 
+    @ElementCollection(targetClass = Roles.class)
+    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "user_roles", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private List<Roles> roles = List.of(Roles.USER);
+
+    @Override
+    public Collection<Roles> getAuthorities() {
+        return roles;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }

@@ -5,9 +5,9 @@ import com.ssrprojects.ultimatechatapp.model.User;
 import java.util.List;
 
 public interface UserService {
-
     List<User> getAllUsers();
-    void addUser(User user);
-    User getUserByUsername(String username);
 
+    void addUser(User user);
+
+    User getUserByUsername(String username);
 }
