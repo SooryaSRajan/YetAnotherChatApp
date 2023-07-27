@@ -1,4 +1,4 @@
-package com.ssrprojects.ultimatechatapp.model.keys;
+package com.ssrprojects.ultimatechatapp.entity.keys;
 
 import lombok.Data;
 import org.springframework.data.cassandra.core.cql.PrimaryKeyType;

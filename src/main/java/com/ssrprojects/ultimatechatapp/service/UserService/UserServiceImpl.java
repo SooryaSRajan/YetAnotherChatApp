@@ -1,6 +1,6 @@
 package com.ssrprojects.ultimatechatapp.service.UserService;
 
-import com.ssrprojects.ultimatechatapp.model.User;
+import com.ssrprojects.ultimatechatapp.entity.User;
 import com.ssrprojects.ultimatechatapp.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

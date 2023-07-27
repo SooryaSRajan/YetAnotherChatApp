@@ -1,6 +1,6 @@
 package com.ssrprojects.ultimatechatapp.service.UserService;
 
-import com.ssrprojects.ultimatechatapp.model.User;
+import com.ssrprojects.ultimatechatapp.entity.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;

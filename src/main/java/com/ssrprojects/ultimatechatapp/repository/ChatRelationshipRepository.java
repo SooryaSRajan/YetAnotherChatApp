@@ -1,6 +1,6 @@
 package com.ssrprojects.ultimatechatapp.repository;
 
-import com.ssrprojects.ultimatechatapp.model.ChatRelationship;
+import com.ssrprojects.ultimatechatapp.entity.ChatRelationship;
 import org.springframework.data.cassandra.repository.CassandraRepository;
 import org.springframework.stereotype.Repository;
 

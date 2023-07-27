@@ -1,8 +1,8 @@
-package com.ssrprojects.ultimatechatapp.model;
+package com.ssrprojects.ultimatechatapp.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.ssrprojects.ultimatechatapp.model.enums.ProfileStatus;
-import com.ssrprojects.ultimatechatapp.model.enums.Roles;
+import com.ssrprojects.ultimatechatapp.entity.enums.ProfileStatus;
+import com.ssrprojects.ultimatechatapp.entity.enums.Roles;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.security.core.userdetails.UserDetails;

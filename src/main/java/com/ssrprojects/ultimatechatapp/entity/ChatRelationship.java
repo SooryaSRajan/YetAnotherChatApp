@@ -1,6 +1,6 @@
-package com.ssrprojects.ultimatechatapp.model;
+package com.ssrprojects.ultimatechatapp.entity;
 
-import com.ssrprojects.ultimatechatapp.model.keys.ChatRelationshipKey;
+import com.ssrprojects.ultimatechatapp.entity.keys.ChatRelationshipKey;
 import lombok.Data;
 import org.springframework.data.cassandra.core.mapping.Column;
 import org.springframework.data.cassandra.core.mapping.PrimaryKey;

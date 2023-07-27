@@ -1,6 +1,6 @@
 package com.ssrprojects.ultimatechatapp.config.security;
 
-import com.ssrprojects.ultimatechatapp.model.enums.Roles;
+import com.ssrprojects.ultimatechatapp.entity.enums.Roles;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;

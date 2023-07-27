@@ -1,6 +1,6 @@
-package com.ssrprojects.ultimatechatapp.model;
+package com.ssrprojects.ultimatechatapp.entity;
 
-import com.ssrprojects.ultimatechatapp.model.enums.MessageAssetType;
+import com.ssrprojects.ultimatechatapp.entity.enums.MessageAssetType;
 import lombok.Data;
 import org.springframework.data.cassandra.core.mapping.UserDefinedType;
 

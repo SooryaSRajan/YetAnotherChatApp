@@ -1,4 +1,4 @@
-package com.ssrprojects.ultimatechatapp.model;
+package com.ssrprojects.ultimatechatapp.entity;
 
 import lombok.Data;
 import org.springframework.data.cassandra.core.mapping.CassandraType;

@@ -1,8 +1,8 @@
 package com.ssrprojects.ultimatechatapp.service.ChatService;
 
-import com.ssrprojects.ultimatechatapp.model.Chat;
-import com.ssrprojects.ultimatechatapp.model.User;
-import com.ssrprojects.ultimatechatapp.model.UserChats;
+import com.ssrprojects.ultimatechatapp.entity.Chat;
+import com.ssrprojects.ultimatechatapp.entity.User;
+import com.ssrprojects.ultimatechatapp.entity.UserChats;
 
 import java.util.List;
 

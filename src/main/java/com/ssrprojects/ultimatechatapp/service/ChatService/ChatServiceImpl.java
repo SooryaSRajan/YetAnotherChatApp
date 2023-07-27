@@ -1,10 +1,10 @@
 package com.ssrprojects.ultimatechatapp.service.ChatService;
 
-import com.ssrprojects.ultimatechatapp.model.Chat;
-import com.ssrprojects.ultimatechatapp.model.ChatRelationship;
-import com.ssrprojects.ultimatechatapp.model.User;
-import com.ssrprojects.ultimatechatapp.model.UserChats;
-import com.ssrprojects.ultimatechatapp.model.keys.ChatRelationshipKey;
+import com.ssrprojects.ultimatechatapp.entity.Chat;
+import com.ssrprojects.ultimatechatapp.entity.ChatRelationship;
+import com.ssrprojects.ultimatechatapp.entity.User;
+import com.ssrprojects.ultimatechatapp.entity.UserChats;
+import com.ssrprojects.ultimatechatapp.entity.keys.ChatRelationshipKey;
 import com.ssrprojects.ultimatechatapp.repository.ChatRelationshipRepository;
 import com.ssrprojects.ultimatechatapp.repository.ChatRepository;
 import org.springframework.stereotype.Service;

@@ -1,6 +1,6 @@
 package com.ssrprojects.ultimatechatapp.controller;
 
-import com.ssrprojects.ultimatechatapp.model.User;
+import com.ssrprojects.ultimatechatapp.entity.User;
 import com.ssrprojects.ultimatechatapp.service.UserService.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

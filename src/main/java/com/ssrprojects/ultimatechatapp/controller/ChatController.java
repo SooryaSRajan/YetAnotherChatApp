@@ -1,7 +1,7 @@
 package com.ssrprojects.ultimatechatapp.controller;
 
-import com.ssrprojects.ultimatechatapp.model.Chat;
-import com.ssrprojects.ultimatechatapp.model.User;
+import com.ssrprojects.ultimatechatapp.entity.Chat;
+import com.ssrprojects.ultimatechatapp.entity.User;
 import com.ssrprojects.ultimatechatapp.service.ChatService.ChatService;
 import com.ssrprojects.ultimatechatapp.service.UserService.UserService;
 import org.springframework.http.ResponseEntity;
