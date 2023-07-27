@@ -2,16 +2,19 @@ package com.ssrprojects.ultimatechatapp.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ssrprojects.ultimatechatapp.model.enums.ProfileStatus;
+import com.ssrprojects.ultimatechatapp.model.enums.Roles;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Entity
 @Data
 @Table(name = "user_details")
-public class User {
+public class User implements UserDetails {
 
     @Id
     @Column(name = "user_id")
@@ -79,5 +82,36 @@ public class User {
         friends = new ArrayList<>();
         pendingRequests = new ArrayList<>();
         sentRequests = new ArrayList<>();
+    }
+
+    @ElementCollection(targetClass = Roles.class)
+    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "user_roles", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private List<Roles> roles = List.of(Roles.USER);
+
+    @Override
+    public Collection<Roles> getAuthorities() {
+        return roles;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }

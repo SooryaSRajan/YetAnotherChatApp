@@ -5,6 +5,7 @@ import com.ssrprojects.ultimatechatapp.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -27,6 +28,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserByUsername(String username) {
-        return userRepository.findByUsername(username);
+        Optional<User> user = userRepository.findByUsername(username);
+        return user.orElse(null);
     }
 }
