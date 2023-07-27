@@ -2,6 +2,8 @@ package com.ssrprojects.ultimatechatapp.service.UserService;
 
 import com.ssrprojects.ultimatechatapp.model.User;
 import com.ssrprojects.ultimatechatapp.repository.UserRepository;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,5 +32,10 @@ public class UserServiceImpl implements UserService {
     public User getUserByUsername(String username) {
         Optional<User> user = userRepository.findByUsername(username);
         return user.orElse(null);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return getUserByUsername(username);
     }
 }

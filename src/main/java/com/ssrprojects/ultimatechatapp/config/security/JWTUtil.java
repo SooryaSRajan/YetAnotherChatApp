@@ -2,6 +2,8 @@ package com.ssrprojects.ultimatechatapp.config.security;
 
 import com.ssrprojects.ultimatechatapp.model.enums.Roles;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
@@ -21,12 +23,11 @@ public class JWTUtil {
 
     public static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60;
 
-    @Value("${jwt.secret}")
+    @Value("${ultimatechatapp.jwt.secret}")
     private String secret;
 
     private Key getSigningKey() {
-        byte[] keyBytes = secret.getBytes();
-        return Keys.hmacShaKeyFor(keyBytes);
+        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
     }
 
     private String doGenerateToken(Map<String, Object> claims, String subject) {
@@ -36,7 +37,7 @@ public class JWTUtil {
                 .setSubject(subject)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))
-                .signWith(getSigningKey())
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
