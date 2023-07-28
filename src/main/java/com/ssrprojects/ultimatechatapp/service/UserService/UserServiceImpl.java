@@ -84,15 +84,7 @@ public class UserServiceImpl implements UserService {
 
         boolean wasMailSuccessful = emailService.sendVerificationEmail(user, verificationToken);
 
-        HashMap<String, String> properties = new HashMap<>();
-        properties.put("userId", user.getId());
-        QueueTask queueTask = QueueTask
-                .builder()
-                .task(Task.REMOVE_UNVERIFIED_USER)
-                .properties(properties)
-                .build();
-
-        queueService.sendMessage(queueTask, 20 * 60 * 1000, 15 * 60 * 1000);
+        //TODO: Schedule task to remove user if not verified in 15 minutes
 
         if (!wasMailSuccessful) {
             throw new RuntimeException("Email could not be sent");
