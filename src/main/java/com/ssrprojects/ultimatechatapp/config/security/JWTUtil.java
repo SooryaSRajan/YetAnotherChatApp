@@ -56,15 +56,14 @@ public class JWTUtil {
     }
 
     public String generateToken(Authentication authentication) {
-
         UserDetails userPrincipal = (UserDetails) authentication.getPrincipal();
 
         Map<String, Object> claims = new HashMap<>();
         Collection<? extends GrantedAuthority> roles = userPrincipal.getAuthorities();
-        if (roles.contains(new SimpleGrantedAuthority(Roles.ADMIN.getAuthority()))) {
+        if (roles.contains(Roles.ADMIN)) {
             claims.put(Roles.ADMIN.getAuthority(), true);
         }
-        if (roles.contains(new SimpleGrantedAuthority(Roles.USER.getAuthority()))) {
+        if (roles.contains(Roles.USER)) {
             claims.put(Roles.USER.getAuthority(), true);
         }
         return doGenerateToken(claims, userPrincipal.getUsername());
@@ -72,7 +71,11 @@ public class JWTUtil {
 
     public boolean validateToken(String token) {
         Claims claims = getAllClaimsFromToken(token);
-        return claims != null && !claims.getExpiration().before(new Date());
+
+        return claims != null
+                && !claims.getExpiration().before(new Date())
+                && (claims.get(Roles.ADMIN.getAuthority(), Boolean.class) != null
+                || claims.get(Roles.USER.getAuthority(), Boolean.class) != null);
     }
 
     public String getUsernameFromToken(String token) {

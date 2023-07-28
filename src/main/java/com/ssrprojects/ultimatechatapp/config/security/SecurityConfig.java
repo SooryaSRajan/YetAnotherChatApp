@@ -57,16 +57,16 @@ public class SecurityConfig {
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
                 .sessionManagement((sessionManagement) -> sessionManagement
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers("/api/authentication/**")
                         .permitAll()
-                        .requestMatchers("/api/admin/**").hasRole(Roles.ADMIN.name())
+                        .requestMatchers("/api/admin/**").hasAuthority(Roles.ADMIN.name())
                         .requestMatchers("/api/**")
-                        .hasAnyRole(Roles.USER.name(), Roles.ADMIN.name())
+                        .hasAnyAuthority(Roles.USER.name(), Roles.ADMIN.name())
                         .anyRequest()
                         .permitAll())
-                .authenticationProvider(authenticationProvider())
-                .addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+                .authenticationProvider(authenticationProvider());
         return http.build();
     }
 
