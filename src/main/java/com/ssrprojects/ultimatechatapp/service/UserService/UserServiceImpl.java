@@ -5,11 +5,9 @@ import com.ssrprojects.ultimatechatapp.entity.enums.Roles;
 import com.ssrprojects.ultimatechatapp.repository.UserRepository;
 import com.ssrprojects.ultimatechatapp.service.MailService.EmailService;
 import com.ssrprojects.ultimatechatapp.service.QueueService.QueueService;
-import com.ssrprojects.ultimatechatapp.service.QueueService.queue.QueueTask;
-import com.ssrprojects.ultimatechatapp.service.QueueService.queue.Task;
 import com.ssrprojects.ultimatechatapp.utils.TokenGenerator;
-import model.SignUpRequest;
-import model.VerificationRequest;
+import com.ssrprojects.ultimatechatapp.model.SignUpRequest;
+import com.ssrprojects.ultimatechatapp.model.VerificationRequest;
 import org.springframework.amqp.AmqpException;
 import org.springframework.data.util.Pair;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,7 +17,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 

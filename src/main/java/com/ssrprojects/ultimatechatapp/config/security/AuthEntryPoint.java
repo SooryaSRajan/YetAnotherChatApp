@@ -1,4 +1,4 @@
-package com.ssrprojects.ultimatechatapp.config.entrypoint;
+package com.ssrprojects.ultimatechatapp.config.security;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

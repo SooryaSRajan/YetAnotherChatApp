@@ -1,8 +1,8 @@
 package com.ssrprojects.ultimatechatapp.service.UserService;
 
 import com.ssrprojects.ultimatechatapp.entity.User;
-import model.SignUpRequest;
-import model.VerificationRequest;
+import com.ssrprojects.ultimatechatapp.model.SignUpRequest;
+import com.ssrprojects.ultimatechatapp.model.VerificationRequest;
 import org.springframework.data.util.Pair;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetailsService;

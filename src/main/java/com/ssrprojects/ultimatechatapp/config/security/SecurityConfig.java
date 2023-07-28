@@ -1,6 +1,5 @@
 package com.ssrprojects.ultimatechatapp.config.security;
 
-import com.ssrprojects.ultimatechatapp.config.entrypoint.AuthEntryPoint;
 import com.ssrprojects.ultimatechatapp.entity.enums.Roles;
 import com.ssrprojects.ultimatechatapp.service.UserService.UserService;
 import org.springframework.context.annotation.Bean;

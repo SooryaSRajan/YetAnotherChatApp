@@ -1,4 +1,4 @@
-package com.ssrprojects.ultimatechatapp.config;
+package com.ssrprojects.ultimatechatapp.config.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
