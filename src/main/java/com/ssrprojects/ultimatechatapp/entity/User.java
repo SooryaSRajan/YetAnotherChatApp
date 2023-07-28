@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import static org.springframework.util.ObjectUtils.isEmpty;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -42,6 +43,12 @@ public class User implements UserDetails {
     private String verificationToken;
 
     private Boolean isVerified = false;
+
+    @Column(name = "created_at")
+    private LocalDateTime createdAt = LocalDateTime.now();
+
+    @Column(name = "verification_token_expiration_date")
+    private LocalDateTime verificationTokenExpirationDate;
 
     @Enumerated(EnumType.STRING)
     private ProfileStatus profileStatus = ProfileStatus.PUBLIC;
@@ -97,6 +104,7 @@ public class User implements UserDetails {
         this.verificationToken = verificationToken;
         if (!isEmpty(verificationToken)) {
             isVerified = false;
+            verificationTokenExpirationDate = LocalDateTime.now().plusMinutes(15);
         }
     }
 
@@ -104,7 +112,12 @@ public class User implements UserDetails {
         isVerified = verified;
         if (verified) {
             verificationToken = "";
+            verificationTokenExpirationDate = null;
         }
+    }
+
+    public boolean hasVerificationExpired() {
+        return LocalDateTime.now().isAfter(verificationTokenExpirationDate);
     }
 
     @Override

@@ -6,6 +6,7 @@ import com.ssrprojects.ultimatechatapp.service.UserService.UserService;
 import jakarta.validation.Valid;
 import model.LoginRequest;
 import model.SignUpRequest;
+import model.VerificationRequest;
 import org.springframework.data.util.Pair;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -61,6 +62,17 @@ public class AuthenticationController {
             }
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/verify")
+    public ResponseEntity<String> verifyUser(@Valid @RequestBody VerificationRequest verificationRequest) {
+        Pair<Boolean, String> result = userService.verifyUser(verificationRequest);
+
+        if (!result.getFirst()) {
+            return ResponseEntity.badRequest().body(result.getSecond());
+        } else {
+            return ResponseEntity.ok(result.getSecond());
         }
     }
 

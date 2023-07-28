@@ -82,10 +82,10 @@
     <p>This verification code will expire after 15 minutes for security reasons.</p>
     <p>If you didn't request this verification, you can ignore this email.</p>
     <p>If you don't have the verification page open, you can paste the following link into your browser: <a
-            th:href="@{${verificationLink}}"></a></p>
+            th:href="@{${verificationLink}}" th:text="${verificationLink}"></a></p>
     <p class="space">Regards,</p>
     <p style="font-weight: bold">Ultimate chat app (We couldn't find a better name)</p>
-    <p>Contact us at <a th:href="@{${contactUsLink}}" th:text="${contactUsLink}"></a> for any questions or
+    <p>Contact us at <a th:href="@{${'mailto:' + contactEmail}}" th:text="${contactEmail}"></a> for any questions or
         suggestions.</p>
 </div>
 </body>
