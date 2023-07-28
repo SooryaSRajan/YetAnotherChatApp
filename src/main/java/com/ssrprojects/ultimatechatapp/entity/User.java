@@ -7,6 +7,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import static org.springframework.util.ObjectUtils.isEmpty;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -33,11 +35,13 @@ public class User implements UserDetails {
 
     private String displayName;
 
-    private Integer age;
-
     private String profilePicture;
 
     private String bio;
+
+    private String verificationToken;
+
+    private Boolean isVerified = false;
 
     @Enumerated(EnumType.STRING)
     private ProfileStatus profileStatus = ProfileStatus.PUBLIC;
@@ -76,7 +80,6 @@ public class User implements UserDetails {
         password = "";
         email = "";
         displayName = "";
-        age = 0;
         profilePicture = "";
         bio = "";
         friends = new ArrayList<>();
@@ -89,6 +92,20 @@ public class User implements UserDetails {
     @Column(name = "user_roles", nullable = false)
     @Enumerated(EnumType.STRING)
     private List<Roles> roles = List.of(Roles.USER);
+
+    public void setVerificationToken(String verificationToken) {
+        this.verificationToken = verificationToken;
+        if (!isEmpty(verificationToken)) {
+            isVerified = false;
+        }
+    }
+
+    public void setVerified(Boolean verified) {
+        isVerified = verified;
+        if (verified) {
+            verificationToken = "";
+        }
+    }
 
     @Override
     public Collection<Roles> getAuthorities() {
@@ -110,8 +127,9 @@ public class User implements UserDetails {
         return true;
     }
 
+    //Use for email verification
     @Override
     public boolean isEnabled() {
-        return true;
+        return isVerified;
     }
 }

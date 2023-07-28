@@ -2,17 +2,16 @@ package com.ssrprojects.ultimatechatapp.controller;
 
 
 import com.ssrprojects.ultimatechatapp.config.security.JWTUtil;
-import com.ssrprojects.ultimatechatapp.entity.User;
-import com.ssrprojects.ultimatechatapp.repository.UserRepository;
+import com.ssrprojects.ultimatechatapp.service.UserService.UserService;
 import jakarta.validation.Valid;
 import model.LoginRequest;
 import model.SignUpRequest;
+import org.springframework.data.util.Pair;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,15 +22,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthenticationController {
 
     private final AuthenticationManager authenticationManager;
-    private final PasswordEncoder passwordEncoder;
     private final JWTUtil jwtTokenUtil;
-    private final UserRepository userRepository;
+    private final UserService userService;
 
-    public AuthenticationController(AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder, JWTUtil jwtTokenUtil, UserRepository userRepository) {
+    public AuthenticationController(AuthenticationManager authenticationManager, JWTUtil jwtTokenUtil, UserService userService) {
         this.authenticationManager = authenticationManager;
-        this.passwordEncoder = passwordEncoder;
         this.jwtTokenUtil = jwtTokenUtil;
-        this.userRepository = userRepository;
+        this.userService = userService;
     }
 
     @PostMapping("/signin")
@@ -54,26 +51,13 @@ public class AuthenticationController {
     @PostMapping("/signup")
     public ResponseEntity<String> registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
 
-        if (userRepository.existsByUsername(signUpRequest.getUsername())) {
-            return ResponseEntity.badRequest().body("Error: Username is already taken");
+        Pair<Boolean, String> result = userService.provisionNewUser(signUpRequest);
+
+        if (!result.getFirst()) {
+            return ResponseEntity.badRequest().body(result.getSecond());
+        } else {
+            return ResponseEntity.ok(result.getSecond());
         }
-
-        if (userRepository.existsByEmail(signUpRequest.getEmail())) {
-            return ResponseEntity.badRequest().body("Error: Email is already in use");
-        }
-
-        User user = new User();
-        user.setUsername(signUpRequest.getUsername());
-        user.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
-        user.setEmail(signUpRequest.getEmail());
-        user.setDisplayName(signUpRequest.getDisplayName());
-
-        //TODO: Email verification, Add email service, verification
-
-        userRepository.save(user);
-
-        return ResponseEntity.ok("User registered successfully!");
-
     }
 
 }
