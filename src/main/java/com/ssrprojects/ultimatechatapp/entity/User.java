@@ -1,12 +1,15 @@
-package com.ssrprojects.ultimatechatapp.model;
+package com.ssrprojects.ultimatechatapp.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.ssrprojects.ultimatechatapp.model.enums.ProfileStatus;
-import com.ssrprojects.ultimatechatapp.model.enums.Roles;
+import com.ssrprojects.ultimatechatapp.entity.enums.ProfileStatus;
+import com.ssrprojects.ultimatechatapp.entity.enums.Roles;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import static org.springframework.util.ObjectUtils.isEmpty;
+
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -33,11 +36,19 @@ public class User implements UserDetails {
 
     private String displayName;
 
-    private Integer age;
-
     private String profilePicture;
 
     private String bio;
+
+    private String verificationToken;
+
+    private Boolean isVerified = false;
+
+    @Column(name = "created_at")
+    private LocalDateTime createdAt = LocalDateTime.now();
+
+    @Column(name = "verification_token_expiration_date")
+    private LocalDateTime verificationTokenExpirationDate;
 
     @Enumerated(EnumType.STRING)
     private ProfileStatus profileStatus = ProfileStatus.PUBLIC;
@@ -76,7 +87,6 @@ public class User implements UserDetails {
         password = "";
         email = "";
         displayName = "";
-        age = 0;
         profilePicture = "";
         bio = "";
         friends = new ArrayList<>();
@@ -89,6 +99,26 @@ public class User implements UserDetails {
     @Column(name = "user_roles", nullable = false)
     @Enumerated(EnumType.STRING)
     private List<Roles> roles = List.of(Roles.USER);
+
+    public void setVerificationToken(String verificationToken) {
+        this.verificationToken = verificationToken;
+        if (!isEmpty(verificationToken)) {
+            isVerified = false;
+            verificationTokenExpirationDate = LocalDateTime.now().plusMinutes(15);
+        }
+    }
+
+    public void setVerified(Boolean verified) {
+        isVerified = verified;
+        if (verified) {
+            verificationToken = "";
+            verificationTokenExpirationDate = null;
+        }
+    }
+
+    public boolean hasVerificationExpired() {
+        return LocalDateTime.now().isAfter(verificationTokenExpirationDate);
+    }
 
     @Override
     public Collection<Roles> getAuthorities() {
@@ -110,8 +140,9 @@ public class User implements UserDetails {
         return true;
     }
 
+    //Use for email verification
     @Override
     public boolean isEnabled() {
-        return true;
+        return isVerified;
     }
 }

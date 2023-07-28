@@ -1,4 +1,4 @@
-package com.ssrprojects.ultimatechatapp.model.enums;
+package com.ssrprojects.ultimatechatapp.entity.enums;
 
 public enum MessageAssetType {
     TEXT,

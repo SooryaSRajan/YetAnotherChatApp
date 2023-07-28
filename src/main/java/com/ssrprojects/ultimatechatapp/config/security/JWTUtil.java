@@ -1,9 +1,12 @@
 package com.ssrprojects.ultimatechatapp.config.security;
 
-import com.ssrprojects.ultimatechatapp.model.enums.Roles;
+import com.ssrprojects.ultimatechatapp.entity.enums.Roles;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,12 +24,11 @@ public class JWTUtil {
 
     public static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60;
 
-    @Value("${jwt.secret}")
+    @Value("${ultimatechatapp.jwt.secret}")
     private String secret;
 
     private Key getSigningKey() {
-        byte[] keyBytes = secret.getBytes();
-        return Keys.hmacShaKeyFor(keyBytes);
+        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
     }
 
     private String doGenerateToken(Map<String, Object> claims, String subject) {
@@ -36,7 +38,7 @@ public class JWTUtil {
                 .setSubject(subject)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))
-                .signWith(getSigningKey())
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
@@ -53,16 +55,19 @@ public class JWTUtil {
         }
     }
 
-    public String generateToken(UserDetails userDetails) {
+    public String generateToken(Authentication authentication) {
+
+        UserDetails userPrincipal = (UserDetails) authentication.getPrincipal();
+
         Map<String, Object> claims = new HashMap<>();
-        Collection<? extends GrantedAuthority> roles = userDetails.getAuthorities();
+        Collection<? extends GrantedAuthority> roles = userPrincipal.getAuthorities();
         if (roles.contains(new SimpleGrantedAuthority(Roles.ADMIN.getAuthority()))) {
             claims.put(Roles.ADMIN.getAuthority(), true);
         }
         if (roles.contains(new SimpleGrantedAuthority(Roles.USER.getAuthority()))) {
             claims.put(Roles.USER.getAuthority(), true);
         }
-        return doGenerateToken(claims, userDetails.getUsername());
+        return doGenerateToken(claims, userPrincipal.getUsername());
     }
 
     public boolean validateToken(String token) {

@@ -1,4 +1,4 @@
-package com.ssrprojects.ultimatechatapp.model;
+package com.ssrprojects.ultimatechatapp.entity;
 
 import lombok.Data;
 import org.springframework.data.cassandra.core.mapping.CassandraType;
@@ -22,11 +22,28 @@ public class UserChats {
     private List<Chat> chats;
 
     public void addToChats(Chat chat) {
+        if (this.chats == null)
+            this.chats = new ArrayList<>();
         this.chats.add(chat);
     }
 
+
     public void addParticipatingUser(String userId) {
+        if (this.participatingUsers == null)
+            this.participatingUsers = new ArrayList<>();
         this.participatingUsers.add(userId);
+    }
+
+    public List<String> getParticipatingUsers() {
+        if (participatingUsers == null)
+            participatingUsers = new ArrayList<>();
+        return participatingUsers;
+    }
+
+    public List<Chat> getChats() {
+        if (chats == null)
+            chats = new ArrayList<>();
+        return chats;
     }
 
     public UserChats() {
