@@ -9,13 +9,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
 import reactor.util.annotation.NonNull;
 
 import java.io.IOException;
-import java.util.List;
 
 import static org.springframework.util.ObjectUtils.isEmpty;
 
@@ -46,14 +44,8 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
         }
 
         // Get user identity and set it on the spring security context
-        UserDetails userDetails = userService.loadUserByUsername(jwtTokenUtil.getUsernameFromToken(token));
-
-        UsernamePasswordAuthenticationToken
-                authentication = new UsernamePasswordAuthenticationToken(
-                userDetails, null,
-                userDetails == null ?
-                        List.of() : userDetails.getAuthorities()
-        );
+        UsernamePasswordAuthenticationToken authentication = userService
+                .getAuthenticationToken(jwtTokenUtil.getUsernameFromToken(token));
 
         authentication.setDetails(
                 new WebAuthenticationDetailsSource().buildDetails(request)

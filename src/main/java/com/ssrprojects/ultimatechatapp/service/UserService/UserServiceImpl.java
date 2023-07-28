@@ -5,6 +5,8 @@ import com.ssrprojects.ultimatechatapp.repository.UserRepository;
 import com.ssrprojects.ultimatechatapp.utils.TokenGenerator;
 import model.SignUpRequest;
 import org.springframework.data.util.Pair;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -82,5 +84,16 @@ public class UserServiceImpl implements UserService {
         }
 
         return user;
+    }
+
+    @Transactional(readOnly = true)
+    public UsernamePasswordAuthenticationToken getAuthenticationToken(String username) {
+        UserDetails userDetails = loadUserByUsername(username);
+
+        return new UsernamePasswordAuthenticationToken(
+                userDetails, null,
+                userDetails == null ?
+                        List.of() : userDetails.getAuthorities()
+        );
     }
 }
