@@ -1,6 +1,7 @@
 package com.ssrprojects.ultimatechatapp.config.security;
 
-import com.ssrprojects.ultimatechatapp.config.entrypoint.AuthJWTEntryPoint;
+import com.ssrprojects.ultimatechatapp.config.entrypoint.AuthEntryPoint;
+import com.ssrprojects.ultimatechatapp.entity.enums.Roles;
 import com.ssrprojects.ultimatechatapp.service.UserService.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,7 +22,7 @@ public class SecurityConfig {
 
     UserService userDetailsService;
 
-    private final AuthJWTEntryPoint unauthorizedHandler;
+    private final AuthEntryPoint unauthorizedHandler;
     private final PasswordEncoder passwordEncoder;
 
     @Bean
@@ -29,7 +30,7 @@ public class SecurityConfig {
         return new TokenAuthenticationFilter();
     }
 
-    public SecurityConfig(UserService userDetailsService, AuthJWTEntryPoint unauthorizedHandler, PasswordEncoder passwordEncoder) {
+    public SecurityConfig(UserService userDetailsService, AuthEntryPoint unauthorizedHandler, PasswordEncoder passwordEncoder) {
         this.userDetailsService = userDetailsService;
         this.unauthorizedHandler = unauthorizedHandler;
         this.passwordEncoder = passwordEncoder;
@@ -56,15 +57,16 @@ public class SecurityConfig {
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
                 .sessionManagement((sessionManagement) -> sessionManagement
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers("/api/authentication/**")
                         .permitAll()
+                        .requestMatchers("/api/admin/**").hasAuthority(Roles.ADMIN.name())
                         .requestMatchers("/api/**")
-                        .authenticated()
+                        .hasAnyAuthority(Roles.USER.name(), Roles.ADMIN.name())
                         .anyRequest()
                         .permitAll())
-                .authenticationProvider(authenticationProvider())
-                .addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+                .authenticationProvider(authenticationProvider());
         return http.build();
     }
 

@@ -1,11 +1,16 @@
 package com.ssrprojects.ultimatechatapp.service.UserService;
 
 import com.ssrprojects.ultimatechatapp.entity.User;
+import com.ssrprojects.ultimatechatapp.entity.enums.Roles;
 import com.ssrprojects.ultimatechatapp.repository.UserRepository;
 import com.ssrprojects.ultimatechatapp.service.MailService.EmailService;
+import com.ssrprojects.ultimatechatapp.service.QueueService.QueueService;
+import com.ssrprojects.ultimatechatapp.service.QueueService.queue.QueueTask;
+import com.ssrprojects.ultimatechatapp.service.QueueService.queue.Task;
 import com.ssrprojects.ultimatechatapp.utils.TokenGenerator;
 import model.SignUpRequest;
 import model.VerificationRequest;
+import org.springframework.amqp.AmqpException;
 import org.springframework.data.util.Pair;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,6 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,12 +29,13 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
+    private final QueueService queueService;
 
-
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, EmailService emailService) {
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, EmailService emailService, QueueService queueService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.emailService = emailService;
+        this.queueService = queueService;
     }
 
     @Override
@@ -48,7 +55,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional(rollbackForClassName = "Exception")
+    @Transactional(rollbackFor = {RuntimeException.class, AmqpException.class})
     public Pair<Boolean, String> provisionNewUser(SignUpRequest signUpRequest) throws RuntimeException {
 
         if (userRepository.existsByUsername(signUpRequest.getUsername())) {
@@ -66,6 +73,7 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
         user.setEmail(signUpRequest.getEmail());
         user.setDisplayName(signUpRequest.getDisplayName());
+        user.setRoles(List.of(Roles.USER));
         user.setVerificationToken(passwordEncoder.encode(verificationToken));
 
         user = userRepository.save(user);
@@ -76,7 +84,7 @@ public class UserServiceImpl implements UserService {
 
         boolean wasMailSuccessful = emailService.sendVerificationEmail(user, verificationToken);
 
-        //TODO: Use message queue to remove user after 15 minutes if account remains unverified
+        //TODO: Schedule task to remove user if not verified in 15 minutes
 
         if (!wasMailSuccessful) {
             throw new RuntimeException("Email could not be sent");
@@ -132,5 +140,13 @@ public class UserServiceImpl implements UserService {
         }
 
         return Pair.of(false, "Verification failed, please check your email and verification code");
+    }
+
+    @Override
+    public void removeUnverifiedUser(String userId) {
+        User user = userRepository.findById(userId).orElse(null);
+        if (user != null && !user.getIsVerified() && user.hasVerificationExpired()) {
+            userRepository.delete(user);
+        }
     }
 }
