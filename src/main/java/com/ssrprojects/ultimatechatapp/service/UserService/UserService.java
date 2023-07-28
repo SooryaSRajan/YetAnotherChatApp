@@ -21,4 +21,6 @@ public interface UserService extends UserDetailsService {
     UsernamePasswordAuthenticationToken getAuthenticationToken(String username);
 
     Pair<Boolean, String> verifyUser(VerificationRequest verificationRequest);
+
+    void removeUnverifiedUser(String userId);
 }

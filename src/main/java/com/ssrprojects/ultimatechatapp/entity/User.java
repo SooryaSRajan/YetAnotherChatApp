@@ -96,9 +96,8 @@ public class User implements UserDetails {
 
     @ElementCollection(targetClass = Roles.class)
     @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
-    @Column(name = "user_roles", nullable = false)
     @Enumerated(EnumType.STRING)
-    private List<Roles> roles = List.of(Roles.USER);
+    private List<Roles> roles;
 
     public void setVerificationToken(String verificationToken) {
         this.verificationToken = verificationToken;

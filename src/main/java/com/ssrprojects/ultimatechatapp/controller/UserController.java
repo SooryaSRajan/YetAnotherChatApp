@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+//TODO: Remove this controller
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
