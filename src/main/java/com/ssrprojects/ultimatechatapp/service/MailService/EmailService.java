@@ -1,5 +1,6 @@
 package com.ssrprojects.ultimatechatapp.service.MailService;
 
+import com.ssrprojects.ultimatechatapp.entity.User;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Value;
@@ -8,17 +9,25 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.spring6.SpringTemplateEngine;
 
 @Service
 public class EmailService {
 
     private final JavaMailSender javaMailSender;
+    private final SpringTemplateEngine templateEngine;
 
-    @Value("${spring.mail.host}")
-    private String host;
+    @Value("${spring.mail.username}")
+    private String botEmail;
 
-    public EmailService(JavaMailSender javaMailSender) {
+    @Value("${ultimatechatapp.app.url}")
+    private String baseUrl;
+
+
+    public EmailService(JavaMailSender javaMailSender, SpringTemplateEngine templateEngine) {
         this.javaMailSender = javaMailSender;
+        this.templateEngine = templateEngine;
     }
 
     public boolean sendTextEmail(String subject, String body, String... recipient) {
@@ -43,7 +52,7 @@ public class EmailService {
         try {
             MimeMessageHelper messageHelper = new MimeMessageHelper(message, true);
 
-            messageHelper.setFrom(host);
+            messageHelper.setFrom(botEmail);
             messageHelper.setTo(recipient);
             messageHelper.setSubject(subject);
 
@@ -61,6 +70,19 @@ public class EmailService {
         }
 
         return true;
+    }
+
+    public boolean sendVerificationEmail(User user, String verificationCode) {
+        Context context = new Context();
+
+        context.setVariable("userFullName", user.getUsername());
+        context.setVariable("verificationCode", verificationCode);
+        context.setVariable("verificationLink", baseUrl + "/verify/" + verificationCode);
+        context.setVariable("contactUsLink", "mailto:" + botEmail);
+
+        String html = templateEngine.process("verification-email.html", context);
+
+        return sendHtmlEmail("[Ultimate Chat App] Verify your email address", html, user.getEmail());
     }
 
 }

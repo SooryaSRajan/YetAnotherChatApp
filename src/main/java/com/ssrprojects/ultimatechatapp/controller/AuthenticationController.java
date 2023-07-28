@@ -51,12 +51,16 @@ public class AuthenticationController {
     @PostMapping("/signup")
     public ResponseEntity<String> registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
 
-        Pair<Boolean, String> result = userService.provisionNewUser(signUpRequest);
+        try {
+            Pair<Boolean, String> result = userService.provisionNewUser(signUpRequest);
 
-        if (!result.getFirst()) {
-            return ResponseEntity.badRequest().body(result.getSecond());
-        } else {
-            return ResponseEntity.ok(result.getSecond());
+            if (!result.getFirst()) {
+                return ResponseEntity.badRequest().body(result.getSecond());
+            } else {
+                return ResponseEntity.ok(result.getSecond());
+            }
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 

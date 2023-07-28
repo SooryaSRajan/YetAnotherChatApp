@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            border: 0;
+            margin: 0;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 14px;
+            color: #333333;
+            line-height: 1.5em;
+        }
+
+        h1 {
+            font-family: Arial, Helvetica, sans-serif;
+            color: #d1ffff;
+            background-color: #218484;
+            padding: 30px;
+            font-size: 3em;
+            height: max-content;
+        }
+
+        p {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 14px;
+            color: #333333;
+            line-height: 1.5em;
+        }
+
+        #text-cntnr {
+            background-color: #c7ffff;
+            padding: 30px;
+            height: max-content;
+            color: #005252;
+        }
+
+        h2 {
+            padding-bottom: 20px;
+        }
+
+        p {
+            padding-bottom: 2px;
+        }
+
+        .ver-code {
+            margin-top: 10px;
+            margin-bottom: 10px;
+            padding: 15px;
+            font-weight: 500;
+            background-color: #f3ffff;
+            border-radius: 5px;
+            box-shadow: 0 0 5px #009696;
+        }
+
+        strong {
+            font-size: 1.5em;
+            color: #005252;
+        }
+
+        .space {
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+<h1>Email Verification Code</h1>
+<div id="text-cntnr">
+    <h2>
+        Hello, <span th:text="${userFullName}"></span>
+    </h2>
+    <p class="message">Thanks for joining ultimate chats, we're very excited to have you onboard.</p>
+    <div class="ver-code">
+        <div>Please use the following verification code to complete your account verification:</div>
+        <div><strong th:text="${verificationCode}"></strong></div>
+    </div>
+    <p>This verification code will expire after 15 minutes for security reasons.</p>
+    <p>If you didn't request this verification, you can ignore this email.</p>
+    <p>If you don't have the verification page open, you can paste the following link into your browser: <a
+            th:href="@{${verificationLink}}"></a></p>
+    <p class="space">Regards,</p>
+    <p style="font-weight: bold">Ultimate chat app (We couldn't find a better name)</p>
+    <p>Contact us at <a th:href="@{${contactUsLink}}" th:text="${contactUsLink}"></a> for any questions or
+        suggestions.</p>
+</div>
+</body>
+</html>

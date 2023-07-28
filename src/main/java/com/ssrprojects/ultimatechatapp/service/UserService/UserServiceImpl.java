@@ -2,6 +2,7 @@ package com.ssrprojects.ultimatechatapp.service.UserService;
 
 import com.ssrprojects.ultimatechatapp.entity.User;
 import com.ssrprojects.ultimatechatapp.repository.UserRepository;
+import com.ssrprojects.ultimatechatapp.service.MailService.EmailService;
 import com.ssrprojects.ultimatechatapp.utils.TokenGenerator;
 import model.SignUpRequest;
 import org.springframework.data.util.Pair;
@@ -20,11 +21,13 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final EmailService emailService;
 
 
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, EmailService emailService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.emailService = emailService;
     }
 
     @Override
@@ -44,8 +47,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional
-    public Pair<Boolean, String> provisionNewUser(SignUpRequest signUpRequest) {
+    @Transactional(rollbackForClassName = "Exception")
+    public Pair<Boolean, String> provisionNewUser(SignUpRequest signUpRequest) throws RuntimeException {
 
         if (userRepository.existsByUsername(signUpRequest.getUsername())) {
             return Pair.of(false, "Error: Username is already taken");
@@ -71,6 +74,11 @@ public class UserServiceImpl implements UserService {
         }
 
         // TODO: Email verification, Add email service, verification
+        boolean wasMailSuccessful = emailService.sendVerificationEmail(user, verificationToken);
+
+        if (!wasMailSuccessful) {
+            throw new RuntimeException("Error: Email could not be sent");
+        }
 
         return Pair.of(true, "User registered successfully");
     }
