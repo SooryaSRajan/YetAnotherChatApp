@@ -1,4 +1,4 @@
-package quartz.action;
+package com.ssrprojects.ultimatechatapp.quartz.action;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssrprojects.ultimatechatapp.service.UserService.UserService;

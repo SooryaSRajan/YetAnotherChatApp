@@ -1,4 +1,4 @@
-package quartz.action;
+package com.ssrprojects.ultimatechatapp.quartz.action;
 
 public enum Jobs {
     DELETE_UNVERIFIED_USERS("Unverified user");

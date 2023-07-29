@@ -1,6 +1,6 @@
 package com.ssrprojects.ultimatechatapp.config.utility;
 
-import quartz.factory.AutoWiringSpringBeanJobFactory;
+import com.ssrprojects.ultimatechatapp.quartz.factory.AutoWiringSpringBeanJobFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;

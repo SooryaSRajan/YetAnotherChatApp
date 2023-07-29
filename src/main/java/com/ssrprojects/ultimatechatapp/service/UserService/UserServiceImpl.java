@@ -25,7 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
-import static quartz.action.Jobs.DELETE_UNVERIFIED_USERS;
+import static com.ssrprojects.ultimatechatapp.quartz.action.Jobs.DELETE_UNVERIFIED_USERS;
 
 @Service
 @Slf4j
