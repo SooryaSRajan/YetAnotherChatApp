@@ -3,7 +3,7 @@ package com.ssrprojects.ultimatechatapp.model.quartz;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.ssrprojects.ultimatechatapp.quartz.action.Action;
+import com.ssrprojects.ultimatechatapp.quartz.action.QuartzJob;
 import lombok.Builder;
 import lombok.Data;
 import org.quartz.*;
@@ -57,7 +57,7 @@ public class JobDescriptor {
         jobDataMap.put("jobGroup", group);
         jobDataMap.put("jobName", name);
 
-        return newJob(Action.class)
+        return newJob(QuartzJob.class)
                 .withIdentity(getName(), getGroup())
                 .usingJobData(jobDataMap)
                 .build();
