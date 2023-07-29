@@ -16,7 +16,7 @@ import java.util.List;
 @EnableCassandraRepositories(basePackages = "com.ssrprojects.ultimatechatapp.repository")
 public class CassandraConfig extends AbstractCassandraConfiguration {
 
-    @Value("${spring.data.cassandra.keyspace-name}")
+    @Value("${spring.cassandra.keyspace-name}")
     private String keyspaceName;
 
     @Override
