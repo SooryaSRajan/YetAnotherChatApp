@@ -3,7 +3,7 @@ package com.ssrprojects.ultimatechatapp;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-//TODO: https://www.youtube.com/watch?v=I0nHQ6Pwgxg, use for scheduling
+//TODO: Implement sockets, chats, group chats, posts, comments, likes and stories.
 
 @SpringBootApplication
 public class UltimateChatAppApplication {
