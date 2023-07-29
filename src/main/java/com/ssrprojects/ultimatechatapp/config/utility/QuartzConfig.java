@@ -12,7 +12,7 @@ import javax.sql.DataSource;
 
 @Configuration
 @RequiredArgsConstructor
-public class QuartzConfiguration {
+public class QuartzConfig {
 
     @Bean
     public SchedulerFactoryBean schedulerFactoryBean(ApplicationContext applicationContext, DataSource quartzDataSource) {
