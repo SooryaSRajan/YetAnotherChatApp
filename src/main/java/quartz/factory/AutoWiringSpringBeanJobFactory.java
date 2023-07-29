@@ -1,4 +1,4 @@
-package com.ssrprojects.ultimatechatapp.factory;
+package quartz.factory;
 
 import org.quartz.spi.TriggerFiredBundle;
 import org.springframework.beans.BeansException;

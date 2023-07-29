@@ -1,6 +1,7 @@
 package com.ssrprojects.ultimatechatapp.model.quartz;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.quartz.JobDataMap;
 import org.quartz.Trigger;
 import org.quartz.Trigger.TriggerState;
@@ -15,9 +16,10 @@ import static org.quartz.CronExpression.isValidExpression;
 import static org.quartz.CronScheduleBuilder.cronSchedule;
 import static org.quartz.SimpleScheduleBuilder.simpleSchedule;
 import static org.quartz.TriggerBuilder.newTrigger;
-import static org.springframework.util.StringUtils.isEmpty;
+import static org.springframework.util.ObjectUtils.isEmpty;
 
 @Data
+@NoArgsConstructor
 public class TriggerDescriptor {
 
     private String name;

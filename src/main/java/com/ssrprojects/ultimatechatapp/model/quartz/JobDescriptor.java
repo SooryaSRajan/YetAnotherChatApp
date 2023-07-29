@@ -3,7 +3,7 @@ package com.ssrprojects.ultimatechatapp.model.quartz;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.ssrprojects.ultimatechatapp.utils.action.Action;
+import quartz.action.Action;
 import lombok.Builder;
 import lombok.Data;
 import org.quartz.*;

@@ -2,12 +2,15 @@ package com.ssrprojects.ultimatechatapp.service.UserService;
 
 import com.ssrprojects.ultimatechatapp.entity.User;
 import com.ssrprojects.ultimatechatapp.entity.enums.Roles;
+import com.ssrprojects.ultimatechatapp.model.quartz.JobDescriptor;
+import com.ssrprojects.ultimatechatapp.model.quartz.TriggerDescriptor;
 import com.ssrprojects.ultimatechatapp.repository.UserRepository;
 import com.ssrprojects.ultimatechatapp.service.MailService.EmailService;
-import com.ssrprojects.ultimatechatapp.service.QueueService.QueueService;
+import com.ssrprojects.ultimatechatapp.service.QuartzService.QuartzService;
 import com.ssrprojects.ultimatechatapp.utils.TokenGenerator;
 import com.ssrprojects.ultimatechatapp.model.request.SignUpRequest;
 import com.ssrprojects.ultimatechatapp.model.request.VerificationRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.AmqpException;
 import org.springframework.data.util.Pair;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -17,22 +20,27 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
+import static quartz.action.Jobs.DELETE_UNVERIFIED_USERS;
+
 @Service
+@Slf4j
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
-    private final QueueService queueService;
+    private final QuartzService quartzService;
 
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, EmailService emailService, QueueService queueService) {
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, EmailService emailService, QuartzService quartzService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.emailService = emailService;
-        this.queueService = queueService;
+        this.quartzService = quartzService;
     }
 
     @Override
@@ -81,13 +89,36 @@ public class UserServiceImpl implements UserService {
 
         boolean wasMailSuccessful = emailService.sendVerificationEmail(user, verificationToken);
 
-        //TODO: Schedule task to remove user if not verified in 15 minutes
+        quartzService.createJob(DELETE_UNVERIFIED_USERS.name(), getTriggerDescriptorForUserDeletion(user));
 
         if (!wasMailSuccessful) {
             throw new RuntimeException("Email could not be sent");
         }
 
         return Pair.of(true, "User registered successfully");
+    }
+
+    private JobDescriptor getTriggerDescriptorForUserDeletion(User user) {
+        String actionName = DELETE_UNVERIFIED_USERS.getJobTitle() + " - " + user.getId();
+
+        final TriggerDescriptor triggerDescriptor = new TriggerDescriptor();
+        triggerDescriptor.setName(actionName);
+        triggerDescriptor.setGroup(DELETE_UNVERIFIED_USERS.name());
+        //TODO: Change to 15 minutes
+        triggerDescriptor.setFireTime(LocalDateTime.now().plusMinutes(20));
+
+        HashMap<String, Object> jobDataMap = new HashMap<>();
+        jobDataMap.put("userId", user.getId());
+
+        log.info("Unverified user deletion task scheduled, trigger descriptor: {}", triggerDescriptor);
+
+        return JobDescriptor
+                .builder()
+                .name(actionName)
+                .group(DELETE_UNVERIFIED_USERS.name())
+                .triggerDescriptors(List.of(triggerDescriptor))
+                .data(jobDataMap)
+                .build();
     }
 
     @Override
@@ -143,7 +174,10 @@ public class UserServiceImpl implements UserService {
     public void removeUnverifiedUser(String userId) {
         User user = userRepository.findById(userId).orElse(null);
         if (user != null && !user.getIsVerified() && user.hasVerificationExpired()) {
+            log.info("Removing unverified user: {}", user);
             userRepository.delete(user);
+            return;
         }
+        log.error("User not found or is already verified: {}", user);
     }
 }

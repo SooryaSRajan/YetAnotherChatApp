@@ -7,12 +7,14 @@ import com.ssrprojects.ultimatechatapp.entity.UserChats;
 import com.ssrprojects.ultimatechatapp.entity.keys.ChatRelationshipKey;
 import com.ssrprojects.ultimatechatapp.repository.ChatRelationshipRepository;
 import com.ssrprojects.ultimatechatapp.repository.ChatRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
 @Service
+@Slf4j
 public class ChatServiceImpl implements ChatService {
 
     private final ChatRepository chatRepository;
@@ -25,18 +27,24 @@ public class ChatServiceImpl implements ChatService {
 
     private UserChats provisionOrGetUserChatForUsers(User userA, User userB) {
 
+        log.info("Provisioning chat for users {} and {}", userA.getId(), userB.getId());
+
         if(userA.getId().equals(userB.getId())) {
+            log.error("User {} and User {} cannot be the same", userA.getId(), userB.getId());
             throw new IllegalArgumentException("User A and User B cannot be the same");
         }
 
         Optional<UserChats> userChats = chatRepository.findByParticipatingUsers(userA.getId(), userB.getId());
 
         if (userChats.isPresent()) {
+            log.info("Chat already exists for users {} and {}", userA.getId(), userB.getId());
             return userChats.get();
         } else {
             UserChats userChatsNew = new UserChats();
             userChatsNew.addParticipatingUser(userA.getId());
             userChatsNew.addParticipatingUser(userB.getId());
+
+            log.info("Saving new user-chat for users {} and {}", userA.getId(), userB.getId());
 
             chatRepository.save(userChatsNew);
 
@@ -48,6 +56,7 @@ public class ChatServiceImpl implements ChatService {
     private void provisionChatRelationship(User userA, User userB, String chatId) {
 
         if(userA.getId().equals(userB.getId())) {
+            log.error("User {} and User {} cannot be the same", userA.getId(), userB.getId());
             throw new IllegalArgumentException("User A and User B cannot be the same");
         }
 
@@ -68,6 +77,8 @@ public class ChatServiceImpl implements ChatService {
         chatRelationship.setChatId(chatId);
 
         chatRelationshipRepository.save(chatRelationship);
+
+        log.info("Saved chat relationship for users {} and {}", userA.getId(), userB.getId());
     }
 
 
@@ -76,6 +87,7 @@ public class ChatServiceImpl implements ChatService {
     public UserChats provisionOrGetChatsForUsers(User userA, User userB) {
 
         if(userA.getId().equals(userB.getId())) {
+            log.error("User {} and User {} cannot be the same", userA.getId(), userB.getId());
             throw new IllegalArgumentException("User A and User B cannot be the same");
         }
 
@@ -92,6 +104,7 @@ public class ChatServiceImpl implements ChatService {
                 //get chat, IDs are the same
                 Optional<UserChats> userChats = chatRepository.findById(chatRelationshipAtoB.get().getChatId());
                 if (userChats.isPresent()) {
+                    log.info("Chat already exists for users {} and {}", userA.getId(), userB.getId());
                     return userChats.get();
                 }
             }
@@ -111,6 +124,7 @@ public class ChatServiceImpl implements ChatService {
     public UserChats getUserChats(User userA, User userB) {
 
         if(userA.getId().equals(userB.getId())) {
+            log.error("User {} and User {} cannot be the same", userA.getId(), userB.getId());
             throw new IllegalArgumentException("User A and User B cannot be the same");
         }
 
