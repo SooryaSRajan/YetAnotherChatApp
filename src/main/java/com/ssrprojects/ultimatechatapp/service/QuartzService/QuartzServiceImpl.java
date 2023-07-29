@@ -20,6 +20,7 @@ public class QuartzServiceImpl implements QuartzService {
 
     private final Scheduler scheduler;
 
+    @Override
     public JobDescriptor createJob(String group, JobDescriptor descriptor) {
         descriptor.setGroup(group);
         JobDetail jobDetail = descriptor.buildJobDetail();
@@ -35,6 +36,7 @@ public class QuartzServiceImpl implements QuartzService {
         return descriptor;
     }
 
+    @Override
     public List<JobDescriptor> findAllJobs() {
         List<JobDescriptor> jobList = new ArrayList<>();
         try {
@@ -54,6 +56,7 @@ public class QuartzServiceImpl implements QuartzService {
     }
 
     @Transactional(readOnly = true)
+    @Override
     public Optional<JobDescriptor> findJob(String group, String name) {
         try {
             JobDetail jobDetail = scheduler.getJobDetail(jobKey(name, group));
@@ -69,6 +72,7 @@ public class QuartzServiceImpl implements QuartzService {
         return Optional.empty();
     }
 
+    @Override
     public Optional<JobDetail> updateJob(String group, String name, JobDescriptor descriptor) {
         try {
             JobDetail oldJobDetail = scheduler.getJobDetail(jobKey(name, group));
@@ -90,6 +94,7 @@ public class QuartzServiceImpl implements QuartzService {
         return Optional.empty();
     }
 
+    @Override
     public void deleteJob(String group, String name) {
         try {
             scheduler.deleteJob(jobKey(name, group));
@@ -99,6 +104,7 @@ public class QuartzServiceImpl implements QuartzService {
         }
     }
 
+    @Override
     public void pauseJob(String group, String name) {
         try {
             scheduler.pauseJob(jobKey(name, group));
@@ -107,7 +113,8 @@ public class QuartzServiceImpl implements QuartzService {
             log.error("Could not pause job with key - {}.{} due to error - {}", group, name, e.getLocalizedMessage());
         }
     }
-    
+
+    @Override
     public void resumeJob(String group, String name) {
         try {
             scheduler.resumeJob(jobKey(name, group));
