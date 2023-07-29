@@ -1,4 +1,4 @@
-package com.ssrprojects.ultimatechatapp.config;
+package com.ssrprojects.ultimatechatapp.config.utility;
 
 import com.ssrprojects.ultimatechatapp.utils.Constants;
 import org.springframework.amqp.core.*;

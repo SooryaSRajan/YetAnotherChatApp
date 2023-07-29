@@ -1,4 +1,4 @@
-package com.ssrprojects.ultimatechatapp.config;
+package com.ssrprojects.ultimatechatapp.config.utility;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
