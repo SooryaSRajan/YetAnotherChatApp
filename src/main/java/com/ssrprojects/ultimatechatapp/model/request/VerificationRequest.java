@@ -1,4 +1,4 @@
-package com.ssrprojects.ultimatechatapp.model;
+package com.ssrprojects.ultimatechatapp.model.request;
 
 import lombok.Getter;
 

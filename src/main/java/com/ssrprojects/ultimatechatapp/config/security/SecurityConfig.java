@@ -61,6 +61,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/authentication/**")
                         .permitAll()
                         .requestMatchers("/api/admin/**").hasAuthority(Roles.ADMIN.name())
+                        .requestMatchers("/api/quartz/**").hasAuthority(Roles.ADMIN.name())
                         .requestMatchers("/api/**")
                         .hasAnyAuthority(Roles.USER.name(), Roles.ADMIN.name())
                         .anyRequest()
