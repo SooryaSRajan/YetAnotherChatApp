@@ -171,13 +171,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void removeUnverifiedUser(String userId) {
         User user = userRepository.findById(userId).orElse(null);
         if (user != null && !user.getIsVerified() && user.hasVerificationExpired()) {
-            log.info("Removing unverified user: {}", user);
+            log.info("Removing unverified user: {}", user.getUsername());
             userRepository.delete(user);
             return;
         }
-        log.error("User not found or is already verified: {}", user);
+        log.error("User not found or is already verified: {}", userId);
     }
 }
