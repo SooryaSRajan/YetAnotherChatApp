@@ -181,4 +181,9 @@ public class UserServiceImpl implements UserService {
         }
         log.error("User not found or is already verified: {}", userId);
     }
+
+    @Override
+    public User saveOrUpdateUser(User user) {
+        return userRepository.save(user);
+    }
 }

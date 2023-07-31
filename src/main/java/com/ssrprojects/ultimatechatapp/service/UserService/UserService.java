@@ -23,4 +23,6 @@ public interface UserService extends UserDetailsService {
     Pair<Boolean, String> verifyUser(VerificationRequest verificationRequest);
 
     void removeUnverifiedUser(String userId);
+
+    User saveOrUpdateUser(User user);
 }

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ssrprojects.ultimatechatapp.entity.enums.ProfileStatus;
 import com.ssrprojects.ultimatechatapp.entity.enums.Roles;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import lombok.Data;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -25,15 +26,20 @@ public class User implements UserDetails {
     private String id;
 
     @Column(nullable = false, unique = true)
+    @Size(min = 3, max = 20, message = "Username must be between 3 and 20 characters")
+    @Pattern(regexp = "^[a-zA-Z0-9_]*$", message = "Username can only contain alphanumeric characters and underscores")
     private String username;
 
     @JsonIgnore
+    @Column(nullable = false)
     private String password;
 
     @Column(nullable = false, unique = true)
     @JsonIgnore
+    @Email
     private String email;
 
+    @Column(nullable = false, unique = true)
     private String displayName;
 
     private String profilePicture;
