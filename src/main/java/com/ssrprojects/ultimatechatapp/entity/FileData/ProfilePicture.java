@@ -2,11 +2,11 @@ package com.ssrprojects.ultimatechatapp.entity.FileData;
 
 import jakarta.persistence.*;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 
 @Entity
 @Table(name = "profile_picture")
-@Getter
+@Data
 @Builder
 public class ProfilePicture {
 
