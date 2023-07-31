@@ -5,6 +5,7 @@ import com.ssrprojects.ultimatechatapp.entity.User;
 import com.ssrprojects.ultimatechatapp.repository.ProfilePictureRepository;
 import com.ssrprojects.ultimatechatapp.service.UserService.UserService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,6 +24,14 @@ public class ProfilePictureService implements FileService<ProfilePicture> {
         this.userService = userService;
     }
 
+    private boolean isImageMediaType(MediaType mediaType) {
+        return mediaType != null
+                && mediaType.getType().equalsIgnoreCase("image")
+                && (mediaType.getSubtype().equalsIgnoreCase("jpeg")
+                || mediaType.getSubtype().equalsIgnoreCase("png")
+        );
+    }
+
     @Transactional(rollbackFor = Exception.class)
     public ProfilePicture saveProfilePictureForUser(MultipartFile multipartFile, String userId) {
         User user = userService.getUserByUsername(userId);
@@ -31,7 +40,13 @@ public class ProfilePictureService implements FileService<ProfilePicture> {
 
         String contentType = multipartFile.getContentType();
 
-        if (contentType != null && !contentType.equals("image/png") && !contentType.equals("image/jpeg")) {
+        if (contentType == null) {
+            throw new RuntimeException("Content type is null");
+        }
+
+        MediaType mediaType = MediaType.parseMediaType(contentType);
+
+        if (!isImageMediaType(mediaType)) {
             throw new RuntimeException("File is not an image");
         }
 
@@ -40,7 +55,7 @@ public class ProfilePictureService implements FileService<ProfilePicture> {
 
             if (profilePicture != null) {
                 profilePicture.setProfilePicture(multipartFile.getBytes());
-                profilePicture.setContentType(contentType);
+                profilePicture.setContentType(mediaType);
                 profilePicture = saveFile(profilePicture);
                 user.setProfilePicture(profilePicture.getProfilePictureId());
                 userService.saveOrUpdateUser(user);
@@ -54,7 +69,7 @@ public class ProfilePictureService implements FileService<ProfilePicture> {
                     .builder()
                     .userId(userId)
                     .profilePicture(multipartFile.getBytes())
-                    .contentType(contentType)
+                    .contentType(mediaType)
                     .build();
 
             profilePicture = saveFile(profilePicture);
@@ -76,16 +91,19 @@ public class ProfilePictureService implements FileService<ProfilePicture> {
         return profilePictureRepository.save(file);
     }
 
+    @Transactional
     public ProfilePicture getProfilePictureForUser(String userId) {
         return profilePictureRepository.findByUserId(userId);
     }
 
     @Override
+    @Transactional
     public ProfilePicture getFile(String id) {
         return profilePictureRepository.findById(id).orElse(null);
     }
 
     @Override
+    @Transactional
     public void deleteFile(String id) {
         profilePictureRepository.deleteById(id);
     }

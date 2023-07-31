@@ -1,42 +1,64 @@
 package com.ssrprojects.ultimatechatapp.controller;
 
-import com.ssrprojects.ultimatechatapp.entity.User;
+import com.ssrprojects.ultimatechatapp.entity.FileData.ProfilePicture;
+import com.ssrprojects.ultimatechatapp.service.FileService.ProfilePictureService;
 import com.ssrprojects.ultimatechatapp.service.UserService.UserService;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
-
-//TODO: Remove this controller
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
 
     private final UserService userService;
+    private final ProfilePictureService profilePictureService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, ProfilePictureService profilePictureService) {
         this.userService = userService;
+        this.profilePictureService = profilePictureService;
     }
 
-    @GetMapping("/getAllUsers")
-    @RequestMapping("/getAllUsers")
-    public List<User> getAllUsers() {
-        return userService.getAllUsers();
+    @GetMapping("/profilePicture/user/{userId}")
+    public ResponseEntity<byte[]> getProfilePicture(@PathVariable String userId) {
+        ProfilePicture profilePicture = profilePictureService.getProfilePictureForUser(userId);
+        return processProfilePicture(profilePicture);
     }
 
-    //sample URL: http://localhost:8080/user/addUser/username/password/email/firstName/lastName
-    @GetMapping("/addUser/{username}/{password}/{email}/{firstName}/{lastName}")
-    public ResponseEntity<String> addUser(@PathVariable String username, @PathVariable String password, @PathVariable String email, @PathVariable String firstName, @PathVariable String lastName) {
-        User user = new User();
-        user.setUsername(username);
-        user.setPassword(password);
-        user.setEmail(email);
-        userService.addUser(user);
+    @GetMapping("/profilePicture/{profilePictureID}")
+    public ResponseEntity<byte[]> getProfilePictureById(@PathVariable String profilePictureID) {
+        ProfilePicture profilePicture = profilePictureService.getFile(profilePictureID);
+        return processProfilePicture(profilePicture);
+    }
 
-        return ResponseEntity.ok("User added successfully");
+    private ResponseEntity<byte[]> processProfilePicture(ProfilePicture profilePicture) {
+        if (profilePicture == null || profilePicture.getProfilePicture() == null) {
+            return ResponseEntity.notFound().build();
+        }
 
+        byte[] imageData = profilePicture.getProfilePicture();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(profilePicture.getContentType());
+
+        return new ResponseEntity<>(imageData, headers, HttpStatus.OK);
+    }
+
+    @PostMapping("/profilePicture/upload")
+    public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        UserDetails userDetails = (UserDetails) securityContext.getAuthentication().getPrincipal();
+
+        try {
+            profilePictureService.saveProfilePictureForUser(file, userDetails.getUsername());
+            return ResponseEntity.status(HttpStatus.OK).body("/api/user/profilePicture/user/" + userDetails.getUsername());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body("Could not upload the file: " + file.getOriginalFilename() + "!");
+        }
     }
 }

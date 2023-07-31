@@ -1,13 +1,17 @@
 package com.ssrprojects.ultimatechatapp.entity.FileData;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import org.hibernate.annotations.Type;
+import org.springframework.http.MediaType;
 
 @Entity
 @Table(name = "profile_picture")
 @Data
 @Builder
+@AllArgsConstructor
 public class ProfilePicture {
 
     @Id
@@ -16,22 +20,22 @@ public class ProfilePicture {
     private String profilePictureId;
 
     @Lob
-    @Column(name = "profile_picture", columnDefinition = "BLOB", length = 2097152)
+    @Column(name = "profile_picture", length = 2097152)
     private byte[] profilePicture;
 
     @Column(nullable = false, unique = true)
     private String userId;
 
     @Column(nullable = false)
-    private String contentType;
+    private MediaType contentType;
+
+    public ProfilePicture(byte[] profilePicture, String userId, MediaType contentType) {
+        this.profilePicture = profilePicture;
+        this.userId = userId;
+        this.contentType = contentType;
+    }
 
     public ProfilePicture() {
 
     }
-
-    public ProfilePicture(String userId, byte[] profilePicture) {
-        this.profilePictureId = userId;
-        this.profilePicture = profilePicture;
-    }
-
 }
