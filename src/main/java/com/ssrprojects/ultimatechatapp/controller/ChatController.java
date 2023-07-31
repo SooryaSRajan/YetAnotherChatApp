@@ -24,6 +24,8 @@ public class ChatController {
         this.userService = userService;
     }
 
+    //TODO: Avoid using user model directly in controller, use username instead
+
     //sample URL: http://localhost:8080/chats/addChat/senderID/receiverID/message
     @GetMapping("/addChat/{senderID}/{receiverID}/{message}")
     public ResponseEntity<String> addChat(@PathVariable String senderID, @PathVariable String receiverID, @PathVariable String message) {
