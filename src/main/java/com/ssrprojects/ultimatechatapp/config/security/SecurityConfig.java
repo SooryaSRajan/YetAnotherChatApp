@@ -58,6 +58,8 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests((authorize) -> authorize
+                        .requestMatchers("/ws/**")
+                        .permitAll()
                         .requestMatchers("/api/authentication/**")
                         .permitAll()
                         .requestMatchers("/api/admin/**").hasAuthority(Roles.ADMIN.name())

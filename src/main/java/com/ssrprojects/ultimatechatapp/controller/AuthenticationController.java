@@ -2,6 +2,8 @@ package com.ssrprojects.ultimatechatapp.controller;
 
 
 import com.ssrprojects.ultimatechatapp.config.security.JWTUtil;
+import com.ssrprojects.ultimatechatapp.model.response.ApiResponse;
+import com.ssrprojects.ultimatechatapp.model.response.LoginResponse;
 import com.ssrprojects.ultimatechatapp.service.UserService.UserService;
 import jakarta.validation.Valid;
 import com.ssrprojects.ultimatechatapp.model.request.LoginRequest;
@@ -33,19 +35,19 @@ public class AuthenticationController {
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<String> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<ApiResponse<LoginResponse>> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
         Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
         if (!authentication.isAuthenticated()) {
-            return ResponseEntity.badRequest().body("Error: Cannot authenticate user");
+            return ResponseEntity.badRequest().body(new ApiResponse<>(null, "Error: Cannot authenticate user"));
         }
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtTokenUtil.generateToken(authentication);
 
-        return ResponseEntity.ok(jwt);
+        return ResponseEntity.ok(new ApiResponse<>(new LoginResponse(jwt, loginRequest.getUsername()), null));
     }
 
     //sample URL: http://localhost:8080/api/authentication/signUp

@@ -6,6 +6,8 @@ import com.ssrprojects.ultimatechatapp.entity.enums.Roles;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import static org.springframework.util.ObjectUtils.isEmpty;
@@ -50,8 +52,11 @@ public class User implements UserDetails {
 
     private Boolean isVerified = false;
 
-    @Column(name = "created_at")
-    private LocalDateTime createdAt = LocalDateTime.now();
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
 
     @Column(name = "verification_token_expiration_date")
     private LocalDateTime verificationTokenExpirationDate;

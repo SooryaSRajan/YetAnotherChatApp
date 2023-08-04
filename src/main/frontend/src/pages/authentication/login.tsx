@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
     Avatar,
     Box,
@@ -10,8 +10,42 @@ import {
     Typography
 } from "@mui/material";
 import {Copyright} from "@mui/icons-material";
+import {useLoginMutation} from "./authentication.slice";
+import {useDispatch} from "react-redux";
+import {setToken} from "../../redux/rootslices/auth-token-slice";
 
 export function Login(): React.ReactElement {
+
+    const [username, setUsername] = useState<string>('')
+    const [password, setPassword] = useState<string>('')
+    const [login, {isLoading: isLoggingIn}] = useLoginMutation();
+    const dispatch = useDispatch();
+
+    //TODO: Add loading, error box
+
+    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+
+        if (!isLoggingIn) {
+            login({ username, password })
+                .then((response) => {
+                    if ('error' in response) {
+                        console.error('Login failed!', response.error);
+                    } else if (response.data.data.token) {
+                        console.log('Login success! Token:', response.data.data.token);
+                        dispatch(setToken(response.data.data.token));
+                    } else {
+                        console.error('Login failed!, token not found');
+                    }
+                })
+                .catch((error) => {
+                    console.error('Login failed!', error);
+                })
+                .finally(() => {
+
+                });
+        }
+    };
 
     return (
         <Container component="main" maxWidth="xs">
@@ -38,17 +72,21 @@ export function Login(): React.ReactElement {
                 <Typography component="h1" variant="h5">
                     Sign in
                 </Typography>
-                <Box component="form" onSubmit={() => {
-                }} noValidate sx={{mt: 1}}>
+                <Box component="form" onSubmit={handleSubmit}
+                     noValidate
+                     sx={{mt: 1}}>
                     <TextField
                         margin="normal"
                         required
                         fullWidth
-                        id="email"
-                        label="Email Address"
-                        name="email"
-                        autoComplete="email"
+                        id="username"
+                        label="Username"
+                        name="username"
+                        autoComplete="username"
                         autoFocus
+                        onChange={(event) => {
+                            setUsername(event.target.value)
+                        }}
                     />
                     <TextField
                         margin="normal"
@@ -59,6 +97,9 @@ export function Login(): React.ReactElement {
                         type="password"
                         id="password"
                         autoComplete="current-password"
+                        onChange={(event) => {
+                            setPassword(event.target.value)
+                        }}
                     />
                     <FormControlLabel
                         control={<Checkbox value="remember" color="primary"/>}
