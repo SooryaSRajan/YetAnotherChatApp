@@ -1,7 +1,7 @@
 import React from "react";
 import {Box, Container, TextField} from "@mui/material";
 
-export function SocketTester(): React.ReactElement {
+export default function SocketTester(): React.ReactElement {
     return (
         <Container component="main" maxWidth="xs">
             <Box
