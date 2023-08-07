@@ -14,7 +14,7 @@ import {useLoginMutation} from "./authentication.slice";
 import {useDispatch} from "react-redux";
 import {setToken} from "../../redux/rootslices/auth-token-slice";
 
-export default function Login(): React.ReactElement {
+export function Login(): React.ReactElement {
 
     const [username, setUsername] = useState<string>('')
     const [password, setPassword] = useState<string>('')
