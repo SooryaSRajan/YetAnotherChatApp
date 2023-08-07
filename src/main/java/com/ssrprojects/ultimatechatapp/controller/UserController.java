@@ -16,11 +16,9 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/api/user")
 public class UserController {
 
-    private final UserService userService;
     private final ProfilePictureService profilePictureService;
 
-    public UserController(UserService userService, ProfilePictureService profilePictureService) {
-        this.userService = userService;
+    public UserController(ProfilePictureService profilePictureService) {
         this.profilePictureService = profilePictureService;
     }
 

@@ -24,6 +24,7 @@ public class User implements UserDetails {
 
     @Id
     @Column(name = "user_id")
+    @JsonIgnore
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
@@ -48,17 +49,25 @@ public class User implements UserDetails {
 
     private String bio;
 
+    @JsonIgnore
     private String verificationToken;
 
+    @JsonIgnore
+    private String activeSessionToken;
+
+    @JsonIgnore
     private Boolean isVerified = false;
 
     @CreationTimestamp
+    @JsonIgnore
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
+    @JsonIgnore
     private LocalDateTime updatedAt;
 
     @Column(name = "verification_token_expiration_date")
+    @JsonIgnore
     private LocalDateTime verificationTokenExpirationDate;
 
     @Enumerated(EnumType.STRING)
