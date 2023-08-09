@@ -4,6 +4,7 @@ import {useSelector} from "react-redux";
 import {selectToken} from "../redux/rootslices/auth-token-slice";
 import {AuthorizedPaths, UnauthorizedPaths} from "./path";
 import AuthorizedRouter from "./authorized-router";
+import DevLinks from "../components/dev/links";
 
 const Login = lazy(() => import('../pages/authentication/login'));
 
@@ -21,6 +22,7 @@ export default function RootRouter(): React.ReactElement {
                     </div>
                 }
             >
+                <DevLinks/>
                 <Switch>
                     <Route
                         path={UnauthorizedPaths.login}
